@@ -28,6 +28,7 @@ export function earnedXp(events=[]){
     }
     if(e.type==='guided')return sum+(Number.isFinite(e.xpAwarded)?e.xpAwarded:GUIDED_XP);
     if(e.type==='complete'&&e.qualified!==false)return sum+(Number.isFinite(e.xpAwarded)?e.xpAwarded:LESSON_BONUS_XP);
+    if(['aha','mistake_resolved','quest_reward'].includes(e.type))return sum+(Number.isFinite(e.xpAwarded)?e.xpAwarded:0);
     return sum;
   },0);
 }

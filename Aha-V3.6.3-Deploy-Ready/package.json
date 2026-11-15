@@ -1,7 +1,7 @@
 {
-  "name": "aha-v3-6-5-vercel-api-diagnostics",
+  "name": "aha-v3-7-learning-update",
   "private": true,
-  "version": "3.6.5",
+  "version": "3.7.0",
   "type": "module",
   "scripts": {
     "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\"",
@@ -9,7 +9,7 @@
     "dev:api": "node local-server.js",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "check": "node --check server.js && node --check server/siteAccess.js && node --check server/ai.js && node --check server/stepTokens.js && node --check server/apiContract.js && node --check server/rateLimit.js && node --check src/mathTokens.js && node --check src/choiceLayout.js && node --check src/apiClient.js && node --check src/demo.js && node --check src/validation.js && node --check src/rewards.js && node --check src/learningFeedback.js && node --check src/momentum.js && node --check src/social.js && npm test",
+    "check": "node --check server.js && node --check server/siteAccess.js && node --check server/ai.js && node --check server/reviewTokens.js && node --check server/usage.js && node --check src/learningUpdate.js && node --check server/stepTokens.js && node --check server/apiContract.js && node --check server/rateLimit.js && node --check src/mathTokens.js && node --check src/choiceLayout.js && node --check src/apiClient.js && node --check src/demo.js && node --check src/validation.js && node --check src/rewards.js && node --check src/learningFeedback.js && node --check src/momentum.js && node --check src/social.js && npm test",
     "test": "node --test tests/*.test.js",
     "start": "node local-server.js"
   },

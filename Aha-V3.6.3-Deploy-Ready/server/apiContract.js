@@ -1,10 +1,12 @@
 import { demoLesson, ladderLesson } from '../src/demo.js';
 import { verifyStepToken } from './stepTokens.js';
+import { unsealReviewStep } from './reviewTokens.js';
 
 const knownDemos = new Map([demoLesson, ladderLesson].map(x => [x.id, x]));
 
 export function getTrustedStep(body) {
   if (!body || typeof body !== 'object') throw new Error('Missing learning step.');
+  if (typeof body.reviewToken === 'string' && body.reviewToken) return unsealReviewStep(body.reviewToken);
   if (typeof body.evaluationToken === 'string' && body.evaluationToken) return verifyStepToken(body.evaluationToken);
   if (body.demo && typeof body.demo === 'object') {
     const lesson = knownDemos.get(body.demo.lessonId);
