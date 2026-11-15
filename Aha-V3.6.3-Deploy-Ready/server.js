@@ -4,7 +4,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { assertSafeProductionConfig, siteAccessMiddleware } from './server/siteAccess.js';
 import multer from 'multer';
-import { PDFParse } from 'pdf-parse';
+// PDF parsing is loaded only when a PDF is uploaded. Importing pdf-parse eagerly
+// can crash unrelated Vercel routes when optional canvas/DOMMatrix APIs are absent.
 import { generateLesson, evaluateReasoning, generateHint } from './server/ai.js';
 import { issueStepToken } from './server/stepTokens.js';
 import { createAiLimiter } from './server/rateLimit.js';
@@ -62,9 +63,19 @@ app.post('/api/lesson', requireAi, limiter, upload.single('pdf'), async (req, re
       if (!req.file.buffer.subarray(0, 5).equals(Buffer.from('%PDF-'))) {
         return res.status(400).json({ error: 'That file does not look like a valid PDF.' });
       }
-      const parser = new PDFParse({ data: new Uint8Array(req.file.buffer) });
-      try { pdfText = (await parser.getText()).text?.trim() || ''; }
-      finally { await parser.destroy(); }
+      // pdf-parse v2 documents loading its worker support before its main entry.
+      // More importantly, these imports must happen ONLY for PDF requests so a
+      // PDF.js runtime incompatibility cannot crash /api/health or text lessons.
+      try {
+        const { CanvasFactory } = await import('pdf-parse/worker');
+        const { PDFParse } = await import('pdf-parse');
+        const parser = new PDFParse({ data: new Uint8Array(req.file.buffer), CanvasFactory });
+        try { pdfText = (await parser.getText()).text?.trim() || ''; }
+        finally { await parser.destroy(); }
+      } catch (pdfError) {
+        console.error('Aha PDF extraction error:', pdfError?.name || 'Error', pdfError?.message || 'unknown');
+        return res.status(422).json({ error: 'This server could not extract text from that PDF. Paste the question as text while PDF compatibility is being checked.' });
+      }
       if (!pdfText) return res.status(422).json({ error: 'The PDF has no readable text. Scanned PDFs need OCR (not included in this version).' });
     }
     const lesson = await generateLesson({ question, referenceText, pdfText, difficulty, sourceName: req.file?.originalname || 'Text input' });

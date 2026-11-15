@@ -1,7 +1,7 @@
 {
-  "name": "aha-v3-6-4-vercel-preview",
+  "name": "aha-v3-6-5-vercel-api-diagnostics",
   "private": true,
-  "version": "3.6.4",
+  "version": "3.6.5",
   "type": "module",
   "scripts": {
     "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\"",

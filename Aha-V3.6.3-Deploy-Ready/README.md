@@ -1,6 +1,6 @@
-# Aha! V3.6.4 — Vercel-ready source
+# Aha! V3.6.5 — Vercel API startup diagnostics
 
-For Vercel setup, see **DEPLOY_VERCEL.md**.
+For Vercel setup, see **DEPLOY_VERCEL.md** and **VERCEL_API_FIX.md**.
 
 > **Deploying Aha! online?** Read [DEPLOY_RENDER.md](DEPLOY_RENDER.md). This V3.6.3 preview serves React and Express on one Render service and can optionally be password-gated for private AI testing. It does not include live Friends messaging or accounts.
 
