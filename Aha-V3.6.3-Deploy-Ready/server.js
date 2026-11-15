@@ -38,6 +38,10 @@ const limiter = createAiLimiter({ max: positiveBoundedNumber(process.env.AI_REQU
 const requireAi = (_req, res, next) => process.env.OPENAI_API_KEY ? next() :
   res.status(503).json({ error: 'AI tutor is in demo mode. Add OPENAI_API_KEY to the backend .env and restart the server.' });
 
+// Navigate to /api/access once to sign in with HTTP Basic before testing private AI.
+// The HTML frontend itself is static on Vercel; this protects paid API endpoints.
+app.get('/api/access', (_req, res) => res.json({ ok: true, privateApi: Boolean(process.env.SITE_ACCESS_PASSWORD) }));
+
 app.get('/api/health', (_req, res) => res.json({
   ok: true,
   aiReady: Boolean(process.env.OPENAI_API_KEY),
